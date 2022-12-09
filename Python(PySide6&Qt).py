@@ -35,3 +35,19 @@ class MainWindow(QObject):
             self.signalLogin.emit(False)
             print("Login error!")
 #login Page
+# INSTACE CLASS
+if __name__ == "__main__":
+    app = QGuiApplication(sys.argv)
+    engine = QQmlApplicationEngine()
+
+    # Get Context
+    main = MainWindow()
+    engine.rootContext().setContextProperty("backend", main)
+
+    # Load QML File
+    engine.load(os.path.join(os.path.dirname(__file__), "qml/main.qml"))
+
+    # Check Exit App
+    if not engine.rootObjects():
+        sys.exit(-1)
+    sys.exit(app.exec_())
