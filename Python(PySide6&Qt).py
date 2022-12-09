@@ -1,18 +1,37 @@
-#importing components we need
 import sys
+import os
 
-from PySide6.QtWidgets import QMainWindow, QPushButton
-from button_holder import ButtonHolder
-class ButtonHolder(QMainWindow):
+# IMPORT MODULES
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtQml import QQmlApplicationEngine
+from PySide6.QtCore import QObject, Slot, Signal
+
+# Main Window Class
+class MainWindow(QObject):
     def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Button Holder")
-        button = QPushButton("Click Me")
+        QObject.__init__(self)
 
-        #Set up the button as our central widget
-        self.setCentralWidget(button)
-app = QApplication(sys.argv)
+    # Static Info
+    staticUser = "wanderson"
+    staticPass = "123456"
 
-window = ButtonHolder()
-window.show()
-app.exec()
+    # Signals To Send Data
+    signalUser = Signal(str)
+    signalPass = Signal(str)
+    signalLogin = Signal(bool)
+
+    # Function To Check Login
+    @Slot(str, str)
+    def checkLogin(self, getUser, getPass):
+        if(self.staticUser.lower() == getUser.lower() and self.staticPass == getPass):
+            # Send User And Pass
+            self.signalUser.emit("Username: " + getUser)
+            self.signalPass.emit("Password: " + getPass)
+
+            # Send Login Signal
+            self.signalLogin.emit(True)
+            print("Login passed!")
+        else:
+            self.signalLogin.emit(False)
+            print("Login error!")
+#login Page
